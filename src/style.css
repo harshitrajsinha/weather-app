@@ -1,0 +1,197 @@
+* {
+  margin: 0;
+  text-decoration: none;
+  list-style: none;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  background-color: #cdbccb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+main {
+  width: 60%;
+  height: 85%;
+  max-height: 85%;
+  display: flex;
+  /* border-radius: 1.2rem; */
+}
+
+section#left-container {
+  width: 60%;
+  border-top-left-radius: 1.2rem;
+  border-bottom-left-radius: 1.2rem;
+  background-image: url("../public/weather-bg-image/clear.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 0 1rem;
+  position: relative;
+}
+
+section#left-container #place-time {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: white;
+}
+
+section#left-container #location {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  font-family: "Roboto", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+section#left-container #loc-icon {
+  font-size: 1.6rem;
+}
+
+section#left-container #loc-city {
+  font-size: 2rem;
+}
+
+section#left-container #loc-country {
+  text-transform: uppercase;
+}
+
+section#left-container #time {
+  font-family: "Roboto", serif;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 1.8rem;
+}
+
+section#left-container #temp-date {
+  color: white;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+section#left-container #temperature {
+  display: flex;
+  gap: 0.5rem;
+  font-family: "Roboto", serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+section#left-container #temp-val {
+  font-size: 7rem;
+}
+
+section#left-container span#temp-deg {
+  font-size: 7rem;
+}
+
+section#left-container #temp-unit {
+  font-size: 7rem;
+}
+
+section#left-container #date {
+  font-family: "Roboto", serif;
+  font-weight: 400;
+  font-style: normal;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 2rem;
+}
+
+section#left-container #left-info {
+  position: absolute;
+  background: linear-gradient(to right bottom, #ffffff 60%, #ffffff 10%);
+  bottom: 8%;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 1.2rem;
+  padding: 1.5rem 0;
+  left: 50%;
+  opacity: 0.5;
+  transform: translateX(-50%);
+}
+
+section#left-container #humidity,
+#visibility,
+#uv-index {
+  font-family: "Roboto", serif;
+  font-weight: 400;
+  font-style: normal;
+  padding: 0 3rem;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+section#right-container {
+  width: 40%;
+  background: #ffffff87;
+  border-top-right-radius: 1.2rem;
+  border-bottom-right-radius: 1.2rem;
+  padding: 2rem 3rem;
+}
+
+section#right-container #search-city {
+  display: flex;
+  border-bottom: 1px solid black;
+}
+
+#search-city input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 1.2rem;
+  color: black;
+  text-align: center;
+}
+
+#search-city #search-icon {
+  font-size: 1.5rem;
+}
+
+#weather-type #type-name {
+  font-size: 4rem;
+  font-family: "Roboto", serif;
+  font-weight: 400;
+  font-style: normal;
+  text-align: center;
+}
+
+#astronomy {
+  border: 1px solid black;
+  display: flex;
+  justify-content: space-between;
+}
+
+#astronomy .astro {
+  width: 50%;
+  border-right: 0.5px solid black;
+}
+
+#astronomy #sunrise-img {
+  width: 100%;
+  padding: 4rem;
+  background-image: url("../public/sunrise.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#astronomy #sunset-img {
+  width: 100%;
+  padding: 4rem;
+  background-image: url("../public/sunset.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#astronomy .astro-data {
+  text-align: center;
+}
