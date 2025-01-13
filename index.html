@@ -29,89 +29,64 @@
 
   <body>
     <main>
+      <div id="search-city">
+        <input type="text" placeholder="Enter City" />
+        <button id="search-icon">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+        <div id="place-list"></div>
+      </div>
+      <div id="place-time">
+        <div id="location">
+          <span id="loc-icon"><i class="fa-solid fa-location-dot"></i></span>
+          <div id="loc-city">Dhanbad</div>
+          <div id="loc-country">in</div>
+        </div>
+        <div id="time">13:12:12</div>
+      </div>
+      <div id="temp-date">
+        <div id="temperature">
+          <div id="temp-val">32</div>
+          <span id="temp-deg">&#176;</span>
+          <div id="temp-unit">c</div>
+        </div>
+        <div id="date">Monday, Dec 30</div>
+      </div>
+      <div id="hourly-forecast">
+        <div id="hourly-heading">
+          <i class="fa-solid fa-clock"></i>&nbsp;24-hour forecast
+        </div>
+        <div id="hour-weather-container"></div>
+      </div>
+      <div id="add-weather-info">
+        <div id="humidity" class="temp-add-info">
+          <div id="humidity-icon"><i class="fa-solid fa-droplet"></i></div>
+          <div id="humidity-val">64<span>%</span></div>
+          <div id="humidity-txt">Humidity</div>
+        </div>
+        <div id="visibility" class="temp-add-info">
+          <div id="visibility-icon">
+            <i class="fa-solid fa-eye-low-vision"></i>
+          </div>
+          <div id="visibility-val">4<span>km</span></div>
+          <div id="wind-txt">Visibility</div>
+        </div>
+        <div id="uv-index" class="temp-add-info">
+          <div id="uv-icon"><i class="fa-solid fa-sun"></i></div>
+          <div id="uv-val">Low</div>
+          <div id="uv-txt">UV<span>&nbsp;</span>Index</div>
+        </div>
+        <!--
+        <div id="aqi-index" class="temp-add-info">
+          <div id="aqi-icon"><i class="fa-solid fa-gauge"></i></div>
+          <div id="aqi-val">Low</div>
+          <div id="aqi-txt">AQI</div>
+        </div> -->
+      </div>
       <section id="left-container">
-        <div id="place-time">
-          <div id="location">
-            <span id="loc-icon"><i class="fa-solid fa-location-dot"></i></span>
-            <div id="loc-city">Dhanbad</div>
-            <div id="loc-country">in</div>
-          </div>
-          <div id="time">13:12:12</div>
-        </div>
-        <div id="temp-date">
-          <div id="temperature">
-            <div id="temp-val">32</div>
-            <span id="temp-deg">&#176;</span>
-            <div id="temp-unit">c</div>
-          </div>
-          <div id="date">Monday, Dec 30</div>
-        </div>
-        <div id="hourly-forecast">
-          <div id="hourly-heading">
-            <i class="fa-solid fa-clock"></i>&nbsp;24-hour forecast
-          </div>
-          <div id="hour-weather-container"></div>
-        </div>
+        <img src="./public/weather-bg-image/clear.png" />
       </section>
-      <section id="right-container">
-        <div id="search-city">
-          <input type="text" placeholder="Enter City" />
-          <button id="search-icon">
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </button>
-          <div id="place-list"></div>
-        </div>
-
-        <div id="weather-type">
-          <div id="weather-lottie-icon">
-            <!-- <lottie-player
-              src="https://lottie.host/16d8aced-291d-4d79-860d-26804bb14bc9/Ax0qw92s3m.json"
-              speed="1"
-              loop
-              autoplay
-              direction="1"
-              mode="normal"
-            ></lottie-player> -->
-          </div>
-          <div id="type-name">Haze</div>
-        </div>
-        <div id="add-weather-info">
-          <div id="humidity" class="temp-add-info">
-            <div id="humidity-icon"><i class="fa-solid fa-droplet"></i></div>
-            <div id="humidity-val">64<span>%</span></div>
-            <div id="humidity-txt">Humidity</div>
-          </div>
-          <div id="visibility" class="temp-add-info">
-            <div id="visibility-icon">
-              <i class="fa-solid fa-eye-low-vision"></i>
-            </div>
-            <div id="visibility-val">4<span>km</span></div>
-            <div id="wind-txt">Visibility</div>
-          </div>
-          <!-- <div id="feels-like" class="temp-add-info">
-            <div id="feels-like">
-              <i class="fa-solid fa-temperature-high"></i>
-            </div>
-            <div id="feels-like-val">32<span>&#176;</span>C</div>
-            <div id="uv-txt">Feels<span>&nbsp;</span>like</div>
-          </div> -->
-          <div id="uv-index" class="temp-add-info">
-            <div id="uv-icon"><i class="fa-solid fa-sun"></i></div>
-            <div id="uv-val">Low</div>
-            <div id="uv-txt">UV<span>&nbsp;</span>Index</div>
-          </div>
-          <!-- <div id="wind-speed" class="temp-add-info">
-            <div id="uv-icon"><i class="fa-solid fa-wind"></i></div>
-            <div id="wind-val">3mph</div>
-            <div id="wind-text">Wind<span>&nbsp;</span>Speed</div>
-          </div>
-          <div id="aqi-index" class="temp-add-info">
-            <div id="aqi-icon"><i class="fa-solid fa-gauge"></i></div>
-            <div id="aqi-val">Low</div>
-            <div id="aqi-txt">AQI</div>
-          </div> -->
-        </div>
-      </section>
+      <section id="right-container"></section>
     </main>
   </body>
 </html>

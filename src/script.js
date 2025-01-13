@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
     try {
       const response = await fetch(
-        "http://localhost:4000/api/weather/v1/forecast",
+        "https://my-server-raj-sinha.vercel.app/api/weather/v1/forecast",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -190,7 +190,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   async function getLocations(query) {
-    const SEARCH_URL = "http://localhost:4000/api/weather/v1/search";
+    const SEARCH_URL =
+      "https://my-server-raj-sinha.vercel.app/api/weather/v1/search";
     const options = {
       method: "POST",
       headers: {
@@ -292,6 +293,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const hrForecastContainer = document.getElementById(
           "hour-weather-container"
         );
+        hrForecastContainer.replaceChildren();
         hrForecastContainer.appendChild(hourlyForecast);
       }
     } else {
