@@ -416,6 +416,9 @@ section#left-container img {
 }
 
 @media screen and (max-width: 540px) {
+  body {
+    overflow-y: scroll;
+  }
   #search-city input {
     width: 100%;
     font-size: 3.5vw;
