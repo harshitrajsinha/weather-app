@@ -1,5 +1,3 @@
-import countriesData from "./countries.json";
-
 document.addEventListener("DOMContentLoaded", function () {
   console.log("script loaded");
 
@@ -73,15 +71,26 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function getCountryCode(countryName) {
-    const countryFirstLetter = countryName.slice(0, 1).toUpperCase();
-    if (!(countryFirstLetter in countriesData.countriesToCode)) {
-      console.log("country not present in list");
-      return;
+  async function getCountryCode(countryName) {
+    try {
+      const response = await fetch("../countries.json");
+      if (!response.ok) {
+        throw new Error("status not ok while fetching country data");
+      }
+      const countriesData = await response.json();
+      if (countriesData) {
+        const countryFirstLetter = countryName.slice(0, 1).toUpperCase();
+        if (!(countryFirstLetter in countriesData.countriesToCode)) {
+          console.log("country not present in list");
+          return;
+        }
+        const countryCode =
+          countriesData["countriesToCode"][countryFirstLetter][countryName];
+        return countryCode;
+      }
+    } catch (error) {
+      console.log("Error occured while fetching country data", error);
     }
-    const countryCode =
-      countriesData["countriesToCode"][countryFirstLetter][countryName];
-    return countryCode;
   }
 
   function createLocationList(locationList) {
@@ -89,13 +98,13 @@ document.addEventListener("DOMContentLoaded", function () {
     placeListCont.replaceChildren();
     const ulElem = document.createElement("ul");
     ulElem.id = "place-container";
-    locationList.forEach((place) => {
+    locationList.forEach(async (place) => {
       const liElem = document.createElement("li");
       liElem.classList.add("place");
       liElem.innerText = place.name;
       const spanElem = document.createElement("span");
       spanElem.classList.add("country");
-      const countryCode = getCountryCode(place.country);
+      const countryCode = await getCountryCode(place.country);
       spanElem.innerHTML = ` ${countryCode}`;
       liElem.appendChild(spanElem);
       ulElem.appendChild(liElem);
@@ -128,12 +137,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // function to display location, date and time
-  function displayLocationTime(locationObj) {
+  async function displayLocationTime(locationObj) {
     const city = locationObj.name;
     const country = locationObj.country.toLowerCase();
     const timezone = locationObj.tz_id;
     document.getElementById("loc-city").textContent = city;
-    const countryCode = getCountryCode(country);
+    const countryCode = await getCountryCode(country);
     document.getElementById("loc-country").textContent = countryCode;
     const [shortMonth, weekday, day] = getTimeData(timezone);
     document.getElementById(

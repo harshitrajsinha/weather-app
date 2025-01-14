@@ -20,7 +20,7 @@ main {
   max-height: 90%;
   display: flex;
   position: relative;
-  border: 1px solid green;
+  /* border: 1px solid green; */
   border-radius: 1.2rem;
 }
 
