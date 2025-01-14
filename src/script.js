@@ -1,8 +1,5 @@
-import countries from "i18n-iso-countries";
-import en from "i18n-iso-countries/langs/en.json";
-countries.registerLocale(en);
+import countriesData from "./countries.json";
 
-// "https://my-server-raj-sinha.vercel.app/api/weather/v1/forecast",
 document.addEventListener("DOMContentLoaded", function () {
   console.log("script loaded");
 
@@ -65,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
         throw new Error("Failed to fetch data");
       }
       if (response.headers.get("Content-Type").includes("application/json")) {
-        const data = response.json();
+        const data = await response.json();
         return data;
       } else {
         throw new Error("Response cannot be parsed as JSON");
@@ -74,6 +71,17 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("Error has occured", error);
       return;
     }
+  }
+
+  function getCountryCode(countryName) {
+    const countryFirstLetter = countryName.slice(0, 1).toUpperCase();
+    if (!(countryFirstLetter in countriesData.countriesToCode)) {
+      console.log("country not present in list");
+      return;
+    }
+    const countryCode =
+      countriesData["countriesToCode"][countryFirstLetter][countryName];
+    return countryCode;
   }
 
   function createLocationList(locationList) {
@@ -87,10 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
       liElem.innerText = place.name;
       const spanElem = document.createElement("span");
       spanElem.classList.add("country");
-      const countryCode = countries.getAlpha2Code(
-        place.country.toLowerCase(),
-        "en"
-      );
+      const countryCode = getCountryCode(place.country);
       spanElem.innerHTML = ` ${countryCode}`;
       liElem.appendChild(spanElem);
       ulElem.appendChild(liElem);
@@ -128,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const country = locationObj.country.toLowerCase();
     const timezone = locationObj.tz_id;
     document.getElementById("loc-city").textContent = city;
-    const countryCode = countries.getAlpha2Code(country, "en");
+    const countryCode = getCountryCode(country);
     document.getElementById("loc-country").textContent = countryCode;
     const [shortMonth, weekday, day] = getTimeData(timezone);
     document.getElementById(
@@ -172,7 +177,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function displayHourlyData(hourlyWeather, hour) {
     const fragment = document.createDocumentFragment();
     const currWeatherObj = hourlyWeather[parseInt(hour)];
-    console.log(currWeatherObj);
     document.getElementById("temp-val").textContent = Math.round(
       currWeatherObj["temp_c"]
     );
