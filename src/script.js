@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function getCountryCode(countryName) {
     try {
-      const response = await fetch("../countries.json");
+      const response = await fetch("./src/countries.json");
       if (!response.ok) {
         throw new Error("status not ok while fetching country data");
       }
