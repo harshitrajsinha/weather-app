@@ -418,6 +418,14 @@ section#left-container img {
 @media screen and (max-width: 540px) {
   body {
     overflow-y: scroll;
+    height: auto;
+  }
+  main {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    max-height: none;
+    min-height: 100vh;
   }
   #search-city input {
     width: 100%;
