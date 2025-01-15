@@ -44,7 +44,8 @@ section#right-container {
   width: 39%;
   height: 100%;
   border-radius: 1.2rem;
-  border: 1px solid green;
+  /* border: 1px solid green; */
+  z-index: -2;
 }
 
 section#right-container::before {
@@ -55,7 +56,7 @@ section#right-container::before {
   inset: 0;
   border-radius: 1.2rem;
   background: linear-gradient(#ffffff7f, #ffffff7f);
-  z-index: -1;
+  z-index: -2;
 }
 
 #place-time {
@@ -204,12 +205,22 @@ section#right-container::before {
 }
 
 #current-weather-lottie {
-  width: 15rem;
-  height: 15rem;
-  margin: 0rem 4rem;
+  /* border: 1px solid green; */
+  width: 39%;
+  margin: 0rem auto;
   position: absolute;
   right: 0;
   top: 4rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+#current-weather-lottie lottie-player {
+  /* border: 1px solid black; */
+  width: 15rem;
+  height: 15rem;
+  margin: 0rem 4rem;
 }
 
 #current-weather-lottie #weather-condition {
@@ -220,14 +231,22 @@ section#right-container::before {
   font-size: 2.5rem;
 }
 
-#search-city {
-  width: auto;
+#search-city-container {
+  /* border: 1px solid green; */
+  width: 39%;
   max-height: 3rem;
-  display: flex;
-  margin: 1rem 2rem;
-  border-bottom: 1px solid black;
+  margin: 1rem auto;
   position: absolute;
   right: 0%;
+}
+
+#search-city {
+  /* border: 1px solid blue; */
+  margin: 0 auto;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid black;
 }
 
 #search-city input {
@@ -255,6 +274,8 @@ section#right-container::before {
 }
 
 #search-city #place-container {
+  width: 50%;
+  margin: 0 auto;
   cursor: pointer;
   border-left: 1px solid black;
   border-right: 1px solid black;
@@ -268,7 +289,7 @@ section#right-container::before {
   right: 0;
   top: 32px;
   background: white;
-  z-index: 1;
+  z-index: 2;
 }
 
 #search-city #place-container .place {
@@ -324,12 +345,41 @@ section#right-container::before {
 
 @media screen and (max-width: 1024px) {
   body {
-    overflow: hidden;
+    overflow: scroll;
+    height: auto;
+    background-color: #0a1121;
   }
 
-  /* body::-webkit-scrollbar {
+  section#right-container {
     display: none;
-  } */
+  }
+
+  #current-weather-lottie {
+    /* border: 1px solid green; */
+    width: 100%;
+    margin: 0rem auto;
+    position: absolute;
+    right: auto;
+    /* top: 55vw; */
+    top: 19vw;
+    color: white;
+    max-height: 50vw;
+  }
+
+  #current-weather-lottie lottie-player {
+    /* border: 1px solid black; */
+    width: 28vw;
+    height: 28vw;
+    margin: 0rem 0rem;
+  }
+
+  #current-weather-lottie #weather-condition {
+    font-size: 6vw;
+  }
+
+  body::-webkit-scrollbar {
+    display: none;
+  }
 
   main {
     position: absolute;
@@ -337,15 +387,19 @@ section#right-container::before {
     width: 100%;
     max-height: none;
     min-height: 100vh;
-    height: 100vh;
+  }
+
+  #search-city-container {
+    /* border: 1px solid green; */
+    width: 100%;
+    max-height: 4.6vw;
+    inset: 0;
   }
 
   #search-city {
-    inset: 0;
     width: 35%;
     text-align: center;
     margin: 3.2vw auto;
-    max-height: 4.6vw;
     display: flex;
     justify-content: center;
     /* border: 1px solid salmon; */
@@ -355,7 +409,8 @@ section#right-container::before {
   }
 
   #search-city #place-container {
-    top: 4.6vw;
+    width: 35%;
+    top: 7vw;
     font-size: 2.5vw;
     max-height: 15vw;
   }
@@ -371,6 +426,7 @@ section#right-container::before {
 
   section#left-container img {
     border-radius: 0;
+    height: auto;
   }
 
   #place-time {
@@ -403,8 +459,10 @@ section#right-container::before {
 
   #temp-date {
     width: 100%;
-    top: 19vw;
-    /* border: 1px solid green; */
+    /* top: 19vw; */
+    top: 55vw;
+    /* border: 1px solid blue; */
+    max-height: 40vw;
   }
 
   #temp-date #temp-val,
@@ -418,21 +476,22 @@ section#right-container::before {
   }
 
   #hourly-forecast {
+    /* border: 1px solid brown; */
+    max-height: 30vw;
     width: 100%;
-    /* top: 89vw; */
-    bottom: 0;
+    top: 100vw;
+    bottom: auto;
     padding: 0 5vw;
-    margin-bottom: 12vw;
   }
 
   #hourly-forecast #hourly-heading {
-    font-size: 3.2vw;
+    font-size: 3.5vw;
     padding-bottom: 3.2vw;
   }
 
   #hourly-forecast #hour-weather-container {
     gap: 5vw;
-    font-size: 2.5vw;
+    font-size: 2.8vw;
   }
   #hourly-forecast .hour-temp-val {
     font-size: 4vw;
@@ -440,8 +499,9 @@ section#right-container::before {
 
   #add-weather-info {
     padding: 0 12vw;
+    padding-bottom: 10vw;
     width: 100%;
-    top: 70vw;
+    top: 140vw;
     bottom: auto;
     gap: 3.2vw;
   }
@@ -451,19 +511,28 @@ section#right-container::before {
     /* line-height: 2.5rem; */
     line-height: 4vw;
   }
+  .temp-add-info::before {
+    background: none;
+  }
 }
 
 @media screen and (max-width: 540px) {
+  #search-city-container {
+    max-height: 9vw;
+    /* border: 1px solid green; */
+  }
+
   #search-city input {
     width: 100%;
-    font-size: 3.5vw;
+    font-size: 4.5vw;
   }
   #search-city button#search-icon {
-    font-size: 2.3vw;
+    font-size: 3.3vw;
   }
   #search-city #place-container .place {
     padding: 1.8vw 1.5vw;
   }
+
   #place-time #loc-icon {
     font-size: 4.5vw;
   }
@@ -473,31 +542,51 @@ section#right-container::before {
   #place-time #time {
     font-size: 6.6vw;
   }
-  #temp-date {
+
+  #current-weather-lottie {
+    max-height: 50vw;
+    /* border: 1px solid green; */
     top: 25vw;
+  }
+
+  #current-weather-lottie lottie-player {
+    /* border: 1px solid black; */
+    width: 35vw;
+    height: 35vw;
+  }
+
+  #current-weather-lottie #weather-condition {
+    font-size: 8vw;
+  }
+
+  #temp-date {
+    /* border: 1px solid salmon; */
+    max-height: 50vw;
+    top: 65vw;
   }
   #temp-date #temp-val,
   #temp-date span#temp-deg,
   #temp-date #temp-unit {
-    font-size: 25vw;
+    font-size: 23vw;
   }
   #temp-date #date {
     font-size: 6.6vw;
   }
   #add-weather-info {
-    top: 90vw;
+    top: 185vw;
   }
   #add-weather-info .temp-add-info {
     font-size: 3.2vw;
     line-height: 4.2vw;
   }
   #hourly-forecast {
-    top: auto;
-    bottom: 0;
+    /* border: 1px solid green; */
+    top: 128vw;
+    bottom: auto;
     margin-bottom: 3vw;
   }
   #hourly-forecast #hourly-heading {
-    font-size: 4vw;
+    font-size: 5vw;
   }
 
   #hourly-forecast #hour-weather-container {
@@ -506,7 +595,7 @@ section#right-container::before {
   }
 
   #hourly-forecast .hour-temp-val {
-    font-size: 5vw;
+    font-size: 6vw;
   }
 }
 
