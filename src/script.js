@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   console.log("script loaded");
+  let setLocationClock;
 
   const weatherType = {
     sunny: {
@@ -305,8 +306,14 @@ document.addEventListener("DOMContentLoaded", function () {
       hour: "numeric",
       hour12: false,
     }).format(date);
+    const minute = new Intl.DateTimeFormat("en-US", {
+      minute: "numeric",
+    }).format(date);
+    const second = new Intl.DateTimeFormat("en-US", {
+      second: "numeric",
+    }).format(date);
 
-    return [shortMonth, weekday, day, hour];
+    return [shortMonth, weekday, day, hour, minute, second];
   }
 
   // function to display location, date and time
@@ -495,9 +502,13 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   async function main(query) {
+    if (setLocationClock) {
+      clearInterval(setLocationClock);
+      setLocationClock = null;
+    }
     const weatherData = await fetchWeatherData(query);
     if (weatherData) {
-      // store hourly data to localStorage
+      // store hourly data to sessionStorage
       const hourlyData = weatherData.data.todayWeather.forecastHourly;
       const timezone = weatherData.data.todayWeather.location.tz_id;
       if (hourlyData) {
@@ -505,11 +516,11 @@ document.addEventListener("DOMContentLoaded", function () {
           timezone: timezone,
           hourlyData: hourlyData,
         };
-        if (localStorage.getItem("hourly-data") !== null) {
-          localStorage.removeItem("hourly-data");
+        if (sessionStorage.getItem("hourly-data") !== null) {
+          sessionStorage.removeItem("hourly-data");
         }
         // now time ka data also store to fetch next hour
-        localStorage.setItem("hourly-data", JSON.stringify(weatherdata));
+        sessionStorage.setItem("hourly-data", JSON.stringify(weatherdata));
       }
 
       // display location and time
@@ -518,8 +529,18 @@ document.addEventListener("DOMContentLoaded", function () {
         displayLocationTime(locationObj);
       }
     }
-    const localHourlyData = localStorage.getItem("hourly-data");
+    const localHourlyData = sessionStorage.getItem("hourly-data");
     if (localHourlyData) {
+      setLocationClock = setInterval(() => {
+        const [, , , hour, minute, second] = getTimeData(
+          JSON.parse(localHourlyData).timezone
+        );
+        const time = `${hour < 10 ? "0" + hour : hour}:${
+          minute < 10 ? "0" + minute : minute
+        }:${second < 10 ? "0" + second : second}`;
+        document.getElementById("time").textContent = "";
+        document.getElementById("time").textContent = time;
+      }, 1000);
       const [, , , hour] = getTimeData(JSON.parse(localHourlyData).timezone);
       const hourlyForecast = displayHourlyData(
         JSON.parse(localHourlyData).hourlyData,
