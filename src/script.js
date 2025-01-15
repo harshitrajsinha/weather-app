@@ -480,12 +480,20 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   document.querySelector("#place-list").addEventListener("click", function (e) {
+    let query;
     document
       .querySelector("#search-city input")
       .removeEventListener("input", handleUserInput);
-    const query = e.target.firstChild.data;
-    document.querySelector("#place-list").style.display = "none";
-    main(query);
+    if (e.target.nodeName === "SPAN") {
+      query = e.target.parentElement.firstChild.data;
+    } else if (e.target.nodeName === "LI") {
+      query = e.target.firstChild.data;
+    }
+    if (query) {
+      document.querySelector("#search-city input").value = query;
+      document.querySelector("#place-list").style.display = "none";
+      main(query);
+    }
   });
 
   document.addEventListener("click", (e) => {
