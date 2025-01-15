@@ -557,4 +557,6 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("Hourly data is not present");
     }
   }
+
+  main("New Delhi");
 });
