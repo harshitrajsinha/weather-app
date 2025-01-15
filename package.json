@@ -10,5 +10,9 @@
   },
   "devDependencies": {
     "vite": "^6.0.5"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
+    "i18n-iso-countries": "^7.13.0"
   }
 }
