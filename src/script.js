@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function setCurrentInfo(hourlyWeather) {
+  function setCurrentInfo(hourlyWeather, hour) {
     let getLottieData, currLottieIcon;
     const currWeatherObj = hourlyWeather[parseInt(hour)];
     const condition = currWeatherObj.condition.text.toLowerCase();
@@ -259,6 +259,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const localHourlyData = sessionStorage.getItem("weather-data");
     if (localHourlyData) {
       const timezone = JSON.parse(localHourlyData).timezone;
+      const hourlyWeather = JSON.parse(localHourlyData).hourlyData;
       if (!setLocationClock) {
         // set and start clock
         setLocationClock = setInterval(() => {
@@ -269,12 +270,9 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       const [, , , hour] = getTimeData(timezone);
       // current hour info
-      setCurrentInfo(hourlyWeather);
+      setCurrentInfo(hourlyWeather, hour);
       // create fragment to display hourly data
-      const hourlyForecast = createHourlyDataElem(
-        JSON.parse(localHourlyData).hourlyData,
-        hour
-      );
+      const hourlyForecast = createHourlyDataElem(hourlyWeather, hour);
       if (hourlyForecast) {
         // append fragment to display hourly data
         const hrForecastContainer = document.getElementById(
