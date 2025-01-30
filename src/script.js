@@ -1,10 +1,56 @@
-import fetchWeatherData from "./weatherData.js";
-import cityList from "./cityList.js";
-import weatherType from "./weatherType.js";
+import fetchWeatherData from "./weather-data.js";
+import cityList from "./city-list.js";
+import weatherType from "./weather-type.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("script loaded");
   let setLocationClock = null;
+
+  async function handleUserSearchInput() {
+    const query = document.querySelector("#search-city input").value;
+    if (!query) {
+      document.getElementById("place-list").style.display = "none";
+    }
+    if (!(query.length > 3)) {
+      console.log("Type more than 3 characters");
+      return;
+    }
+    const locationList = await cityList(query);
+    if (locationList && locationList.length) {
+      document.getElementById("place-list").style.display = "block";
+      createLocationList(locationList);
+    }
+  }
+
+  document.querySelector("#place-list").addEventListener("click", function (e) {
+    let query;
+    document
+      .querySelector("#search-city input")
+      .removeEventListener("input", handleUserSearchInput);
+    if (e.target.nodeName === "SPAN") {
+      query = e.target.parentElement.firstChild.data;
+    } else if (e.target.nodeName === "LI") {
+      query = e.target.firstChild.data;
+    }
+    if (query) {
+      document.querySelector("#search-city input").value = query;
+      document.querySelector("#place-list").style.display = "none";
+      main(query);
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    let placeConDisplay = document.getElementById("place-list").style.display;
+    if (!e.target.classList.contains("place") && placeConDisplay === "block") {
+      document.getElementById("place-list").style.display = "none";
+    }
+  });
+
+  document.querySelector("#search-city input").addEventListener("focus", () => {
+    document
+      .querySelector("#search-city input")
+      .addEventListener("input", handleUserSearchInput);
+  });
 
   function createLocationList(locationList) {
     const placeListCont = document.getElementById("place-list");
@@ -39,19 +85,25 @@ document.addEventListener("DOMContentLoaded", function () {
       getIconData = weatherType[condition];
     }
     const isDay = currWeather["is_day"];
-    if (isDay && getIconData) {
-      currTempIcon = getIconData["fav-icon"];
-    } else if (!isDay && getIconData) {
-      if ("is-night-icon" in getIconData) {
-        currTempIcon = getIconData["is-night-icon"];
-      } else {
+    if (getIconData) {
+      if (isDay) {
         currTempIcon = getIconData["fav-icon"];
+      } else if (!isDay) {
+        if ("is-night-icon" in getIconData) {
+          currTempIcon = getIconData["is-night-icon"];
+        } else {
+          currTempIcon = getIconData["fav-icon"];
+        }
       }
-    } else if (isDay && !getIconData) {
-      currTempIcon = "<i class='fa-solid fa-cloud-sun'></i>";
-    } else if (!isDay && !getIconData) {
-      currTempIcon = "<i class='fa-solid fa-moon' style='color: #ece5c8'></i>";
+    } else if (!getIconData) {
+      if (isDay) {
+        currTempIcon = "<i class='fa-solid fa-cloud-sun'></i>";
+      } else if (!isDay) {
+        currTempIcon =
+          "<i class='fa-solid fa-moon' style='color: #ece5c8'></i>";
+      }
     }
+
     const divObj = {
       tempVal: {
         class: "hour-temp-val",
@@ -79,80 +131,43 @@ document.addEventListener("DOMContentLoaded", function () {
     return divContainer;
   }
 
-  async function handleUserInput() {
-    const query = document.querySelector("#search-city input").value;
-    if (!query) {
-      document.getElementById("place-list").style.display = "none";
-    }
-    if (!(query.length > 3)) {
-      console.log("Type more than 3 characters");
-      return;
-    }
-    const locationList = await cityList(query);
-    if (locationList && locationList.length) {
-      document.getElementById("place-list").style.display = "block";
-      createLocationList(locationList);
+  function updateTextContent(id, content) {
+    const element = document.getElementById(id);
+    if (element) {
+      element.textContent = content;
+    } else {
+      console.error(`Element with id '${id}' not found`);
     }
   }
 
-  document.querySelector("#place-list").addEventListener("click", function (e) {
-    let query;
-    document
-      .querySelector("#search-city input")
-      .removeEventListener("input", handleUserInput);
-    if (e.target.nodeName === "SPAN") {
-      query = e.target.parentElement.firstChild.data;
-    } else if (e.target.nodeName === "LI") {
-      query = e.target.firstChild.data;
-    }
-    if (query) {
-      document.querySelector("#search-city input").value = query;
-      document.querySelector("#place-list").style.display = "none";
-      main(query);
-    }
-  });
-
-  document.addEventListener("click", (e) => {
-    let placeConDisplay = document.getElementById("place-list").style.display;
-    if (!e.target.classList.contains("place") && placeConDisplay === "block") {
-      document.getElementById("place-list").style.display = "none";
-    }
-  });
-
-  document.querySelector("#search-city input").addEventListener("focus", () => {
-    document
-      .querySelector("#search-city input")
-      .addEventListener("input", handleUserInput);
-  });
-
-  // function to dispaly 24-hour forecast
-  function displayHourlyData(hourlyWeather, hour) {
+  function setCurrentInfo(hourlyWeather) {
     let getLottieData, currLottieIcon;
-    const fragment = document.createDocumentFragment();
     const currWeatherObj = hourlyWeather[parseInt(hour)];
-    document.getElementById("temp-val").textContent = Math.round(
-      currWeatherObj["temp_c"]
-    );
     const condition = currWeatherObj.condition.text.toLowerCase();
     if (condition in weatherType) {
       getLottieData = weatherType[condition];
     }
     const isDay = currWeatherObj["is_day"];
-    if (isDay && getLottieData) {
-      currLottieIcon = getLottieData["lottie-url"];
-    } else if (!isDay && getLottieData) {
-      if ("is-night-url" in getLottieData) {
-        currLottieIcon = getLottieData["is-night-url"];
-      } else {
+    if (getLottieData) {
+      if (isDay) {
         currLottieIcon = getLottieData["lottie-url"];
+      } else if (!isDay) {
+        if ("is-night-url" in getLottieData) {
+          currLottieIcon = getLottieData["is-night-url"];
+        } else {
+          currLottieIcon = getLottieData["lottie-url"];
+        }
       }
     } else if (isDay && !getLottieData) {
-      currLottieIcon =
-        "https://lottie.host/16d8aced-291d-4d79-860d-26804bb14bc9/Ax0qw92s3m.json";
-    } else if (!isDay && !getLottieData) {
-      currLottieIcon =
-        "https://lottie.host/82081fd5-e6e4-4502-a820-3a9d4293cc46/psqP1MQVIE.json";
+      if (isDay) {
+        currLottieIcon =
+          "https://lottie.host/16d8aced-291d-4d79-860d-26804bb14bc9/Ax0qw92s3m.json";
+      } else if (!isDay) {
+        currLottieIcon =
+          "https://lottie.host/82081fd5-e6e4-4502-a820-3a9d4293cc46/psqP1MQVIE.json";
+      }
     }
+
     const lottie = `<lottie-player
           src = ${currLottieIcon}
           background="##ffffff"
@@ -164,12 +179,14 @@ document.addEventListener("DOMContentLoaded", function () {
         ></lottie-player><div id="weather-condition">${condition}</div>`;
     document.querySelector("#current-weather-lottie").innerHTML = lottie;
 
-    document.getElementById(
-      "humidity-val"
-    ).textContent = `${currWeatherObj["humidity"]}%`;
-    document.getElementById(
-      "visibility-val"
-    ).textContent = `${currWeatherObj["vis_km"]} km`;
+    updateTextContent("humidity-val", `${currWeatherObj["humidity"]}%`);
+    updateTextContent("visibility-val", `${currWeatherObj["vis_km"]} km`);
+    updateTextContent("temp-val", `${Math.round(currWeatherObj["temp_c"])}`);
+  }
+
+  // function to create fragment for 24-hour forecast
+  function createHourlyDataElem(hourlyWeather, hour) {
+    const fragment = document.createDocumentFragment();
     hourlyWeather.forEach((currHrWeather) => {
       const weatherElem = createCurrHrComp(currHrWeather);
       fragment.appendChild(weatherElem);
@@ -230,27 +247,36 @@ document.addEventListener("DOMContentLoaded", function () {
     ];
   }
 
+  // function to get latest time
+  function latestTime(timezone) {
+    const [, , , hour, minute, second] = getTimeData(timezone);
+    const time = `${hour}:${minute < 10 ? "0" + minute : minute}:${
+      second < 10 ? "0" + second : second
+    }`;
+  }
+
   function processHourlyData() {
     const localHourlyData = sessionStorage.getItem("weather-data");
     if (localHourlyData) {
+      const timezone = JSON.parse(localHourlyData).timezone;
       if (!setLocationClock) {
+        // set and start clock
         setLocationClock = setInterval(() => {
-          const [, , , hour, minute, second] = getTimeData(
-            JSON.parse(localHourlyData).timezone
-          );
-          const time = `${hour}:${minute < 10 ? "0" + minute : minute}:${
-            second < 10 ? "0" + second : second
-          }`;
+          const time = latestTime(timezone);
           document.getElementById("time").textContent = "";
           document.getElementById("time").textContent = time;
         }, 1000);
       }
-      const [, , , hour] = getTimeData(JSON.parse(localHourlyData).timezone);
-      const hourlyForecast = displayHourlyData(
+      const [, , , hour] = getTimeData(timezone);
+      // current hour info
+      setCurrentInfo(hourlyWeather);
+      // create fragment to display hourly data
+      const hourlyForecast = createHourlyDataElem(
         JSON.parse(localHourlyData).hourlyData,
         hour
       );
       if (hourlyForecast) {
+        // append fragment to display hourly data
         const hrForecastContainer = document.getElementById(
           "hour-weather-container"
         );
@@ -259,7 +285,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     } else {
       console.error("Hourly data is not present");
-      console.trace();
+      return;
     }
   }
 
@@ -267,16 +293,17 @@ document.addEventListener("DOMContentLoaded", function () {
   async function displayLocationTime({ name: city, country, tz_id: timezone }) {
     const [month, weekday, day] = getTimeData(timezone);
     const countryCode = await getCountryCode(country);
-    if (city) {
-      document.getElementById("loc-city").textContent = city;
-    } else {
-      console.error("Unable to fetch city");
-    }
-    if (country) {
-      document.getElementById("loc-country").textContent = countryCode;
+    if (countryCode) {
+      updateTextContent("loc-country", countryCode);
     } else {
       console.error("Unable to fetch country code");
     }
+    if (city) {
+      updateTextContent("loc-city", city);
+    } else {
+      console.error("Unable to fetch city");
+    }
+
     if (weekday && month && day) {
       document.getElementById("date").innerHTML = `${weekday}, ${month} ${day}`;
     } else {
@@ -291,11 +318,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!hourlyData) {
       console.error("Unable to fetch hourly data");
       // display error alert and fallback [IMP]
-      return;
-    } else if (!timezone) {
-      console.error("Unable to fetch timezone data");
-      // display error alert and fallback [IMP]
-      return;
+      return false;
     }
     const weatherdata = {
       timezone: timezone,
@@ -306,6 +329,7 @@ document.addEventListener("DOMContentLoaded", function () {
       sessionStorage.removeItem("weather-data"); // clear previous data
     }
     sessionStorage.setItem("weather-data", JSON.stringify(weatherdata));
+    return true;
   }
 
   async function main(place) {
@@ -320,14 +344,17 @@ document.addEventListener("DOMContentLoaded", function () {
       // display error alert and fallback [IMP]
       return;
     }
-    storeWeatherData(weatherData, place);
+    const isDataSaved = storeWeatherData(weatherData, place);
 
     // display location and time
     const locationInfo = weatherData.data.todayWeather.location;
     if (locationInfo) {
       displayLocationTime(locationInfo);
     }
-    processHourlyData();
+
+    if (isDataSaved) {
+      processHourlyData();
+    }
   }
 
   main("New Delhi");
