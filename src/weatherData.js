@@ -60,12 +60,11 @@ async function fetchWeatherData(location) {
     if (!response.ok) {
       throw new Error("Failed to fetch data");
     }
-    if (response.headers.get("Content-Type").includes("application/json")) {
-      const data = await response.json();
-      return data;
-    } else {
+    if (!response.headers.get("Content-Type").includes("application/json")) {
       throw new Error("Response cannot be parsed as JSON");
     }
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.log("Error has occured", error);
     return;

@@ -4,7 +4,7 @@ import weatherType from "./weatherType.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("script loaded");
-  let setLocationClock;
+  let setLocationClock = null;
 
   function createLocationList(locationList) {
     const placeListCont = document.getElementById("place-list");
@@ -189,7 +189,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const countryFirstLetter = countryName.slice(0, 1).toUpperCase();
         if (!(countryFirstLetter in countriesData.countriesToCode)) {
           console.error("country not present in list");
-          console.trace();
           return;
         }
         const countryCode =
@@ -204,47 +203,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // format time based on timezone
   function getTimeData(timezone) {
-    let tzObj = new Date();
-    const tzDate = tzObj.toLocaleString("en-US", {
+    const formatter = new Intl.DateTimeFormat("en-US", {
       timeZone: timezone,
-    });
-    const date = new Date(tzDate);
-
-    const shortMonth = new Intl.DateTimeFormat("en-US", {
       month: "short",
-    }).format(date);
-    const weekday = new Intl.DateTimeFormat("en-US", {
       weekday: "long",
-    }).format(date);
-    const day = new Intl.DateTimeFormat("en-US", {
       day: "numeric",
-    }).format(date);
-    const hour = new Intl.DateTimeFormat("en-US", {
       hour: "numeric",
-      hour12: false,
-    }).format(date);
-    const minute = new Intl.DateTimeFormat("en-US", {
       minute: "numeric",
-    }).format(date);
-    const second = new Intl.DateTimeFormat("en-US", {
       second: "numeric",
-    }).format(date);
+      hour12: false, // Use 24-hour format
+    });
 
-    return [shortMonth, weekday, day, hour, minute, second];
-  }
+    const date = new Date();
+    const parts = formatter.formatToParts(date);
 
-  // function to display location, date and time
-  async function displayLocationTime(locationObj) {
-    const city = locationObj.name;
-    const country = locationObj.country.toLowerCase();
-    const timezone = locationObj.tz_id;
-    const [shortMonth, weekday, day] = getTimeData(timezone);
-    const countryCode = await getCountryCode(country);
-    document.getElementById("loc-city").textContent = city;
-    document.getElementById("loc-country").textContent = countryCode;
-    document.getElementById(
-      "date"
-    ).innerHTML = `${weekday}, ${shortMonth} ${day}`;
+    const timeData = Object.fromEntries(
+      parts.map(({ type, value }) => [type, value])
+    );
+    return [
+      timeData.month,
+      timeData.weekday,
+      timeData.day,
+      timeData.hour,
+      timeData.minute,
+      timeData.second,
+    ];
   }
 
   function processHourlyData() {
@@ -280,38 +263,69 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // function to display location, date and time
+  async function displayLocationTime({ name: city, country, tz_id: timezone }) {
+    const [month, weekday, day] = getTimeData(timezone);
+    const countryCode = await getCountryCode(country);
+    if (city) {
+      document.getElementById("loc-city").textContent = city;
+    } else {
+      console.error("Unable to fetch city");
+    }
+    if (country) {
+      document.getElementById("loc-country").textContent = countryCode;
+    } else {
+      console.error("Unable to fetch country code");
+    }
+    if (weekday && month && day) {
+      document.getElementById("date").innerHTML = `${weekday}, ${month} ${day}`;
+    } else {
+      console.error("Unable to fetch date");
+    }
+  }
+
   // store weather data in local storage
   function storeWeatherData(wdata, location) {
     const hourlyData = wdata.data.todayWeather.forecastHourly;
     const timezone = wdata.data.todayWeather.location.tz_id;
+    if (!hourlyData) {
+      console.error("Unable to fetch hourly data");
+      // display error alert and fallback [IMP]
+      return;
+    } else if (!timezone) {
+      console.error("Unable to fetch timezone data");
+      // display error alert and fallback [IMP]
+      return;
+    }
     const weatherdata = {
       timezone: timezone,
       hourlyData: hourlyData,
       location: location,
     };
     if (sessionStorage.getItem("weather-data") !== null) {
-      sessionStorage.removeItem("weather-data");
+      sessionStorage.removeItem("weather-data"); // clear previous data
     }
     sessionStorage.setItem("weather-data", JSON.stringify(weatherdata));
   }
 
-  async function main(query) {
+  async function main(place) {
+    // is clock's intervalId null?
     if (setLocationClock) {
       clearInterval(setLocationClock);
       setLocationClock = null;
     }
-    const weatherData = await fetchWeatherData(query);
-    if (weatherData) {
-      storeWeatherData(weatherData, query);
+    const weatherData = await fetchWeatherData(place);
+    if (!weatherData) {
+      console.error(`Weather data not fetched for location: ${place}`);
+      // display error alert and fallback [IMP]
+      return;
+    }
+    storeWeatherData(weatherData, place);
 
-      // display location and time
-      const locationObj = weatherData.data.todayWeather.location;
-      if (locationObj) {
-        displayLocationTime(locationObj);
-      }
-    } else {
-      console.error(`Weather data not fetched for location: ${query}`);
-      console.trace();
+    // display location and time
+    const locationInfo = weatherData.data.todayWeather.location;
+    if (locationInfo) {
+      displayLocationTime(locationInfo);
     }
     processHourlyData();
   }
