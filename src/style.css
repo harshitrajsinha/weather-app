@@ -102,8 +102,32 @@ section#right-container::before {
   font-size: 1.8rem;
 }
 
+.air-quality {
+  position: absolute;
+  left: 0;
+  top: 17.5rem;
+  width: 60%;
+  padding-top: 1rem;
+  color: white;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.aqi-container {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  width: max-content;
+  margin: 0 auto;
+  background-color: #848181d6;
+  padding: 0.5rem;
+  border-radius: 2rem;
+  font-family: "Roboto", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 #temp-date {
-  /* border: 1px solid salmon; */
   position: absolute;
   left: 0;
   top: 4.5rem;
@@ -292,10 +316,23 @@ section#right-container::before {
   z-index: 2;
 }
 
+#search-city #place-container::-webkit-scrollbar {
+  width: 0.8rem;
+}
+
+#search-city #place-container::-webkit-scrollbar-thumb {
+  border-radius: 0.5rem;
+  background-color: rgba(56, 49, 49, 0.707);
+}
+
 #search-city #place-container .place {
   padding: 0.8rem 1rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid black;
+}
+
+li.place:hover {
+  background-color: #c9c9c9;
 }
 
 #search-city #place-container .place:last-child {
@@ -352,6 +389,10 @@ section#right-container::before {
 
   section#right-container {
     display: none;
+  }
+
+  #search-city #place-container::-webkit-scrollbar {
+    width: 1rem;
   }
 
   #current-weather-lottie {
@@ -457,6 +498,17 @@ section#right-container::before {
     font-size: 4.6vw;
   }
 
+  .air-quality {
+    top: 88vw;
+    width: 100%;
+    font-size: 4.6vw;
+  }
+
+  .aqi-container {
+    gap: 1.2rem;
+    border-radius: 2rem;
+  }
+
   #temp-date {
     width: 100%;
     /* top: 19vw; */
@@ -479,7 +531,7 @@ section#right-container::before {
     /* border: 1px solid brown; */
     max-height: 30vw;
     width: 100%;
-    top: 100vw;
+    top: 105vw;
     bottom: auto;
     padding: 0 5vw;
   }
@@ -501,7 +553,7 @@ section#right-container::before {
     padding: 0 12vw;
     padding-bottom: 10vw;
     width: 100%;
-    top: 140vw;
+    top: 145vw;
     bottom: auto;
     gap: 3.2vw;
   }
@@ -533,6 +585,19 @@ section#right-container::before {
     padding: 1.8vw 1.5vw;
   }
 
+  #search-city #place-container {
+    top: 9.6vw;
+    font-size: 3vw;
+  }
+
+  #search-city #place-container::-webkit-scrollbar {
+    width: 0.5rem;
+  }
+
+  #search-city #place-container span {
+    font-size: 2vw;
+  }
+
   #place-time #loc-icon {
     font-size: 4.5vw;
   }
@@ -559,6 +624,17 @@ section#right-container::before {
     font-size: 8vw;
   }
 
+  .air-quality {
+    top: 110vw;
+    width: 100%;
+    font-size: 6vw;
+  }
+
+  .aqi-container {
+    gap: 0.5rem;
+    border-radius: 2rem;
+  }
+
   #temp-date {
     /* border: 1px solid salmon; */
     max-height: 50vw;
@@ -573,7 +649,7 @@ section#right-container::before {
     font-size: 6.6vw;
   }
   #add-weather-info {
-    top: 185vw;
+    top: 190vw;
   }
   #add-weather-info .temp-add-info {
     font-size: 3.2vw;
@@ -581,7 +657,7 @@ section#right-container::before {
   }
   #hourly-forecast {
     /* border: 1px solid green; */
-    top: 128vw;
+    top: 137vw;
     bottom: auto;
     margin-bottom: 3vw;
   }
