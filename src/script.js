@@ -1,6 +1,7 @@
 import fetchWeatherData from "./weather-data.js";
 import cityList from "./city-list.js";
 import weatherType from "./weather-type.js";
+import getAqiData from "./aqi.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("script loaded");
@@ -250,9 +251,20 @@ document.addEventListener("DOMContentLoaded", function () {
   // function to get latest time
   function latestTime(timezone) {
     const [, , , hour, minute, second] = getTimeData(timezone);
-    const time = `${hour}:${minute < 10 ? "0" + minute : minute}:${
-      second < 10 ? "0" + second : second
-    }`;
+    if (parseInt(minute) === 0 && parseInt(second) === 0) {
+      // update latest weather data for (this) hour
+      const weatherObj = sessionStorage.getItem("weather-data");
+      if (!weatherObj || parseInt(hour) === 0) {
+        const place = document.getElementById("loc-city");
+        console.log("0 hour");
+        main(place);
+        return;
+      }
+      const currWeatherObj = JSON.parse(weatherObj).hourlyData[parseInt(hour)];
+      setCurrentInfo(currWeatherObj);
+    }
+    const time = `${hour}:${minute}:${second}`;
+    return time;
   }
 
   function processHourlyData() {
@@ -309,6 +321,22 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  function setAqiIndex(aqiData) {
+    let icon;
+    const [, aqiValue, aqiStatus] = getAqiData(aqiData);
+    document.querySelector(".air-quality__value").innerHTML = aqiValue;
+    if (aqiStatus === "Good") {
+      icon = `<i class="fa-brands fa-envira"></i>`;
+    } else if (aqiStatus === "Satisfactory" || aqiStatus === "Moderate") {
+      icon = `<i class="fa-solid fa-face-grimace"></i>`;
+    } else if (aqiStatus === "Poor" || aqiStatus === "Very Poor") {
+      icon = `<i class="fa-solid fa-mask-face"></i>`;
+    } else if (aqiStatus === "Severe") {
+      icon = `<i class="fa-solid fa-skull"></i>`;
+    }
+    document.querySelector(".air-quality__icon").innerHTML = icon;
+  }
+
   // store weather data in local storage
   function storeWeatherData(wdata, location) {
     const hourlyData = wdata.data.todayWeather.forecastHourly;
@@ -343,9 +371,11 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
     const isDataSaved = storeWeatherData(weatherData, place);
+    setAqiIndex(weatherData.data.todayWeather.airQuality);
 
     // display location and time
     const locationInfo = weatherData.data.todayWeather.location;
+
     if (locationInfo) {
       displayLocationTime(locationInfo);
     }
