@@ -15,7 +15,7 @@ body {
 }
 
 main {
-  width: 60%;
+  width: clamp(808px, 60%, 922px);
   height: 90%;
   max-height: 90%;
   display: flex;

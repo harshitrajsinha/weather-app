@@ -140,10 +140,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function setCurrentInfo(hourlyWeather, hour) {
+  function setCurrentInfo(currWeatherObj) {
     let getLottieData, currLottieIcon;
-    const currWeatherObj = hourlyWeather[parseInt(hour)];
-    const condition = currWeatherObj.condition.text.toLowerCase();
+    const condition = currWeatherObj.condition.text.trim().toLowerCase();
     if (condition in weatherType) {
       getLottieData = weatherType[condition];
     }
@@ -167,7 +166,6 @@ document.addEventListener("DOMContentLoaded", function () {
           "https://lottie.host/82081fd5-e6e4-4502-a820-3a9d4293cc46/psqP1MQVIE.json";
       }
     }
-
     const lottie = `<lottie-player
           src = ${currLottieIcon}
           background="##ffffff"
@@ -250,9 +248,22 @@ document.addEventListener("DOMContentLoaded", function () {
   // function to get latest time
   function latestTime(timezone) {
     const [, , , hour, minute, second] = getTimeData(timezone);
-    const time = `${hour}:${minute < 10 ? "0" + minute : minute}:${
-      second < 10 ? "0" + second : second
-    }`;
+    if (parseInt(minute) === 0 && parseInt(second) === 0) {
+      // update latest weather data for (this) hour
+      const weatherObj = sessionStorage.getItem("weather-data");
+      if (!weatherObj || parseInt(hour) === 0) {
+        const place = document.getElementById("loc-city");
+        console.log("0 hour");
+        main(place);
+        return;
+      }
+      const currWeatherObj =
+        JSON.parse(weatherObj).hourlyData[parseInt(hour) + 1];
+      console.log(currWeatherObj);
+      setCurrentInfo(currWeatherObj);
+    }
+    const time = `${hour}:${minute}:${second}`;
+    return time;
   }
 
   function processHourlyData() {
@@ -270,7 +281,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       const [, , , hour] = getTimeData(timezone);
       // current hour info
-      setCurrentInfo(hourlyWeather, hour);
+      setCurrentInfo(hourlyWeather[parseInt(hour)]);
       // create fragment to display hourly data
       const hourlyForecast = createHourlyDataElem(hourlyWeather, hour);
       if (hourlyForecast) {
