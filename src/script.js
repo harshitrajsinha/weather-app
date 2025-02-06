@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let currTempIcon, getIconData;
     const divContainer = document.createElement("div");
     divContainer.classList.add("hour-weather");
-    const condition = currWeather.condition.text.toLowerCase();
+    const condition = currWeather.condition.text.trim().toLowerCase();
     if (condition in weatherType) {
       getIconData = weatherType[condition];
     }
@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function setCurrentInfo(hourlyWeather, hour) {
     let getLottieData, currLottieIcon;
     const currWeatherObj = hourlyWeather[parseInt(hour)];
-    const condition = currWeatherObj.condition.text.toLowerCase();
+    const condition = currWeatherObj.condition.text.trim().toLowerCase();
     if (condition in weatherType) {
       getLottieData = weatherType[condition];
     }
